@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import ScrollZoomHero from '../components/ScrollZoomHero.jsx'
 import Carousel from '../components/Carousel.jsx'
 import Navbar from '../components/Navbar.jsx'
+import Footer from '../components/Footer.jsx'
+import SectionHeading from '../components/SectionHeading.jsx'
 import { supabase, isSupabaseConfigured } from '../utils/supabase.js'
 
 const FACEBOOK_URL = 'https://www.facebook.com/p/Kamay-Gabay-61570749000594/'
@@ -34,36 +36,6 @@ const advocacyAreas = [
       'Creating accessible learning opportunities and collaborative spaces for people who want to take part.',
   },
 ]
-
-function SectionHeading({ eyebrow, title, description, light = false }) {
-  return (
-    <div className="max-w-2xl">
-      <p
-        className={`text-xs font-bold uppercase tracking-[0.22em] ${
-          light ? 'text-[#F5C253]' : 'text-emerald-800'
-        }`}
-      >
-        {eyebrow}
-      </p>
-      <h2
-        className={`mt-3 font-serif text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl ${
-          light ? 'text-white' : 'text-[#23351C]'
-        }`}
-      >
-        {title}
-      </h2>
-      {description && (
-        <p
-          className={`mt-4 text-sm leading-7 sm:text-base ${
-            light ? 'text-emerald-50/80' : 'text-slate-600'
-          }`}
-        >
-          {description}
-        </p>
-      )}
-    </div>
-  )
-}
 
 export default function Landing() {
   const [activities, setActivities] = useState([])
@@ -109,11 +81,11 @@ export default function Landing() {
       <Navbar
         fixed
         links={[
-          { href: '#about', label: 'About' },
-          { href: '#advocacy', label: 'Advocacy' },
-          { href: '#activities', label: 'Activities' },
+          { to: '/about', label: 'About' },
           { to: '/history', label: 'History' },
+          { to: '/activities', label: 'Activities' },
           { to: '/officers', label: 'Officers' },
+          { to: '/contact', label: 'Contact' },
         ]}
         cta={{ label: 'Get involved', to: '#get-involved' }}
       />
@@ -383,62 +355,7 @@ export default function Landing() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#10251A] px-6 pb-8 pt-14 text-emerald-50 sm:px-10 lg:px-12">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-10 border-b border-white/10 pb-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-            <div>
-              <h2 className="text-2xl font-extrabold tracking-tight text-[#F5C253]">
-                Kamay-Gabay
-              </h2>
-              <p className="mt-3 max-w-xs text-sm leading-6 text-emerald-50/65">
-                Empowering voices. Embracing inclusion. A youth-led initiative
-                based in Barangay Tibungco, Davao City.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-bold text-white">Explore</h3>
-              <div className="mt-4 flex flex-col gap-3 text-sm text-emerald-50/70">
-                <a href="#about" className="hover:text-[#F5C253]">About</a>
-                <a href="#advocacy" className="hover:text-[#F5C253]">Advocacy</a>
-                <Link to="/history" className="hover:text-[#F5C253]">History</Link>
-                <Link to="/activities" className="hover:text-[#F5C253]">Activities</Link>
-                <Link to="/officers" className="hover:text-[#F5C253]">Officers</Link>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-bold text-white">Contact</h3>
-              <div className="mt-4 flex flex-col gap-3 text-sm text-emerald-50/70">
-                <a href="tel:+639939023168" className="hover:text-[#F5C253]">
-                  +63 993 902 3168
-                </a>
-                <a href="mailto:kamaygabay@gmail.com" className="break-all hover:text-[#F5C253]">
-                  kamaygabay@gmail.com
-                </a>
-                <p>Barangay Tibungco, Davao City</p>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-bold text-white">Follow our work</h3>
-              <a
-                href={FACEBOOK_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-flex text-sm text-emerald-50/70 underline underline-offset-4 hover:text-[#F5C253]"
-              >
-                Official Facebook page →
-              </a>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2 pt-6 text-xs text-emerald-50/45 sm:flex-row sm:items-center sm:justify-between">
-            <p>© {new Date().getFullYear()} Kamay-Gabay. All rights reserved.</p>
-            <a href="#top" className="hover:text-[#F5C253]">Back to top ↑</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
