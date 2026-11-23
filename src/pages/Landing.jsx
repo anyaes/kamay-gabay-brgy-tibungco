@@ -1,366 +1,441 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+
 import ScrollZoomHero from '../components/ScrollZoomHero.jsx'
+import Carousel from '../components/Carousel.jsx'
+import Navbar from '../components/Navbar.jsx'
+import { supabase, isSupabaseConfigured } from '../utils/supabase.js'
+
+const FACEBOOK_URL = 'https://www.facebook.com/p/Kamay-Gabay-61570749000594/'
+
+const advocacyAreas = [
+  {
+    number: '01',
+    title: 'Inclusive communities',
+    description:
+      'Promoting understanding, accessibility, and meaningful participation for children with special needs.',
+  },
+  {
+    number: '02',
+    title: 'Deaf awareness and Filipino Sign Language',
+    description:
+      'Encouraging awareness of the Deaf community and the value of Filipino Sign Language.',
+  },
+  {
+    number: '03',
+    title: 'Youth empowerment',
+    description:
+      'Encouraging young people to take an active role in compassionate and meaningful community action.',
+  },
+  {
+    number: '04',
+    title: 'Community engagement',
+    description:
+      'Creating accessible learning opportunities and collaborative spaces for people who want to take part.',
+  },
+]
+
+function SectionHeading({ eyebrow, title, description, light = false }) {
+  return (
+    <div className="max-w-2xl">
+      <p
+        className={`text-xs font-bold uppercase tracking-[0.22em] ${
+          light ? 'text-[#F5C253]' : 'text-emerald-800'
+        }`}
+      >
+        {eyebrow}
+      </p>
+      <h2
+        className={`mt-3 font-serif text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl ${
+          light ? 'text-white' : 'text-[#23351C]'
+        }`}
+      >
+        {title}
+      </h2>
+      {description && (
+        <p
+          className={`mt-4 text-sm leading-7 sm:text-base ${
+            light ? 'text-emerald-50/80' : 'text-slate-600'
+          }`}
+        >
+          {description}
+        </p>
+      )}
+    </div>
+  )
+}
 
 export default function Landing() {
-  const [openFaq, setOpenFaq] = useState(null)
-  const [activeTab, setActiveTab] = useState(0)
+  const [activities, setActivities] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [activityError, setActivityError] = useState(false)
 
-  const aboutTabs = [
-    {
-      id: 'mission',
-      label: 'Mission',
-      content:
-        'Kamay-Gabay is committed to fostering holistic community inclusion and youth empowerment through accessible educational workshops, advocacy campaigns, and hands-on learning initiatives. By making it free and open to everyone who wants to join our growing network, we create safe, active, and collaborative spaces that champion diversity, accessibility, and equal care for every child and youth.',
-    },
-    {
-      id: 'vision',
-      label: 'Vision',
-      content:
-        'To build an inclusive, barrier-free society where disability awareness, equal opportunities, and the active integration of children with special needs and the Deaf community are fully embraced, driven by empowered youth leading compassionate community action.',
-    },
-  ]
+  useEffect(() => {
+    let isMounted = true
 
-  const faqList = [
-    {
-      q: 'Who can be a member?',
-      a: 'Anyone who participates in any workshop or activity conducted by Kamay Gabay becomes a member of the organization.',
-    },
-    {
-      q: 'How does membership work?',
-      a: 'All Kamay Gabay activities have a registration process. Participants register before joining an activity or workshop. There is no registration or membership fee. Participation in a registered Kamay Gabay activity qualifies an individual for membership.',
-    },
-    { q: 'More questions' },
-  ]
+    async function loadActivities() {
+      if (!isSupabaseConfigured || !supabase) {
+        if (isMounted) setLoading(false)
+        return
+      }
 
-  const glanceData = [
-    { stat: '3', title: 'Projects', desc: 'FSL Workshops and Fun Days' },
-    { stat: 'Youth-led', title: 'Organization Nature', desc: 'Built and run by the youth' },
-    { stat: '2023', title: 'Year Started', desc: 'When we started' },
-    { stat: '2026', title: 'Current Year', desc: 'Where we are now' },
-  ]
+      try {
+        const { data, error } = await supabase
+          .from('activities')
+          .select('*')
+          .eq('published', true)
+          .order('date', { ascending: false })
+          .limit(3)
+
+        if (error) throw error
+        if (isMounted) setActivities(data || [])
+      } catch (error) {
+        console.error('Unable to load featured activities:', error)
+        if (isMounted) setActivityError(true)
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+
+    loadActivities()
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-800 font-sans selection:bg-emerald-500 selection:text-white">
-      {/* 1. TOP NAVBAR */}
-      <nav className="w-full bg-[#173022]/90 backdrop-blur-md text-white py-4 px-6 sm:px-12 flex justify-between items-center fixed top-0 left-0 z-50 border-b border-emerald-900/50 shadow-md">
-        <div className="font-extrabold text-xl tracking-tight text-[#F5C253]">
-          Kamay-Gabay
-        </div>
-        <div className="hidden sm:flex items-center gap-6 text-sm font-medium text-slate-200">
-          <a href="#glance" className="hover:text-[#F5C253] transition">
-            At a Glance
-          </a>
-          <a href="#about" className="hover:text-[#F5C253] transition">
-            About
-          </a>
-          <a href="#faq" className="hover:text-[#F5C253] transition">
-            FAQ
-          </a>
-          <a href="#activities" className="hover:text-[#F5C253] transition">
-            Projects
-          </a>
-          <a href="/admin/login" className="hover:text-[#F5C253] transition">
-            Admin
-          </a>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-[#FAF4DE] font-sans text-slate-800 selection:bg-emerald-700 selection:text-white">
+      {/* Navigation */}
+      <Navbar
+        fixed
+        links={[
+          { href: '#about', label: 'About' },
+          { href: '#advocacy', label: 'Advocacy' },
+          { href: '#activities', label: 'Activities' },
+          { to: '/history', label: 'History' },
+          { to: '/officers', label: 'Officers' },
+        ]}
+        cta={{ label: 'Get involved', to: '#get-involved' }}
+      />
 
-      {/* 2. HERO — scroll-zoom stylized map */}
-      <ScrollZoomHero />
+      {/* Existing scroll-zoom hero */}
+      <div id="top" className="scroll-mt-20">
+        <ScrollZoomHero />
+      </div>
 
-      {/* 3. MAIN CREAM CONTAINER */}
-      <main className="bg-[#FAF4DE] rounded-t-[2.5rem] sm:rounded-t-[4rem] relative z-20 -mt-8 pt-16 pb-20 px-6 sm:px-12 lg:px-24 shadow-2xl">
-        <section id="who" className="max-w-6xl mx-auto py-16 text-center">
-          <h1 className="text-4xl sm:text-4xl font-extrabold text-[#23351C] mb-4">
-            Who are we?
-          </h1>
-          <p className="max-w-3xl mx-auto text-slate-700 text-sm sm:text-base leading-relaxed mb-12">
-            Kamay Gabay is a youth-led initiative in Barangay Tibungco that promotes inclusion
-            particularly on children with special needs, Deaf awareness, and Filipino Sign
-            Language, and youth empowerment. Founded in 2023, it continues to engage the
-            community through advocacy, learning, and meaningful participation. Kamay Gabay
-            envisions a community where everyone is seen, heard, understood, and valued.
-          </p>
-        </section>
-
-        <section id="about" className="max-w-6xl mx-auto items-center">
-          <div className="lg:col-span-7 flex flex-col gap-5">
-            <span className="text-xs font-bold text-emerald-800 tracking-wider uppercase">
-              ABOUT US
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#23351C] tracking-tight">
-              {aboutTabs[activeTab].label}
-            </h2>
-
-            <div className="flex flex-wrap gap-3 my-1">
-              {aboutTabs.map((tab, idx) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(idx)}
-                  className={`px-5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 ${
-                    activeTab === idx
-                      ? 'bg-[#173022] text-white shadow-md scale-105'
-                      : 'bg-slate-200/80 hover:bg-slate-300 text-slate-700'
-                  }`}
+      <main className="relative z-20">
+        {/* About / introduction */}
+        <section id="about" className="scroll-mt-24 px-6 pb-20 pt-24 sm:pt-28">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[1.15fr_0.85fr]">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-800">
+                Who we are
+              </p>
+              <h1 className="mt-3 max-w-3xl font-serif text-3xl font-extrabold leading-tight text-[#23351C] sm:text-4xl lg:text-5xl">
+                Empowering voices. Embracing inclusion.
+              </h1>
+              <p className="mt-6 max-w-2xl text-sm leading-7 text-slate-700 sm:text-base">
+                Kamay-Gabay is a youth-led initiative based in Barangay Tibungco,
+                Davao City. Founded in 2023, it promotes inclusion for children
+                with special needs, Deaf awareness, Filipino Sign Language, and
+                youth empowerment. Through advocacy, learning, and meaningful
+                participation, Kamay-Gabay works toward a community where
+                everyone is seen, heard, understood, and valued.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  to="/history"
+                  className="rounded-full bg-[#173022] px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-900"
                 >
-                  {tab.label.toUpperCase()}
-                </button>
-              ))}
+                  Discover our story
+                </Link>
+                <a
+                  href="#advocacy"
+                  className="rounded-full border border-emerald-900/30 px-6 py-3 text-sm font-bold text-[#173022] transition hover:bg-white/70"
+                >
+                  What we stand for
+                </a>
+              </div>
             </div>
 
-            <p className="text-slate-700 leading-relaxed text-sm sm:text-base min-h-[70px] transition-all duration-300">
-              {aboutTabs[activeTab].content}
-            </p>
-          </div>
-        </section>
-
-        <section id="glance" className="max-w-6xl mt-16 mx-auto mb-16">
-          <div className="bg-[#173022] text-white rounded-3xl py-8 px-4 sm:px-6 md:py-10 shadow-xl border border-emerald-900/40">
-            <div className="text-center mb-6">
-              <span className="text-xs font-bold text-[#F5C253] tracking-widest uppercase">
-                AT A GLANCE
-              </span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-0">
-              {glanceData.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-center text-center px-4 md:border-r border-emerald-800/60 last:border-r-0"
-                >
-                  <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#F5C253] tracking-tight mb-2">
-                    {item.stat}
-                  </span>
-                  <span className="text-xs sm:text-sm font-bold text-white tracking-wider uppercase mb-1">
-                    {item.title}
-                  </span>
-                  <span className="text-xs text-emerald-100/70 max-w-[180px] leading-relaxed">
-                    {item.desc}
-                  </span>
+            <div className="rounded-3xl border border-[#e7dfc7] bg-[#F2EBD7] p-7 sm:p-9">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-800">
+                Our purpose
+              </p>
+              <p className="mt-4 font-serif text-2xl font-bold leading-snug text-[#23351C] sm:text-3xl">
+                A community where everyone belongs, participates, and is valued.
+              </p>
+              <div className="mt-7 grid grid-cols-2 gap-4 border-t border-emerald-900/15 pt-6">
+                <div>
+                  <p className="text-3xl font-black text-[#173022]">2023</p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Year established
+                  </p>
                 </div>
-              ))}
+                <div>
+                  <p className="text-3xl font-black text-[#173022]">Youth-led</p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Community initiative
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* SECTION 3: ALTERNATING CONTENT LEFT */}
-        <section className="max-w-6xl mx-auto py-12 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-span-8 flex flex-col gap-3">
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-[#23351C]">
-              How we started.
-            </h3>
-            <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
-              Kamay Gabay began in 2023 after winning Hiyas ng Tibungco 2023, with the advocacy
-              of promoting sign language learning. The advocacy carried the theme: “Empowering
-              Voices, Embracing Inclusion.” This opportunity opened the doors for the very first
-              Kamay Gabay Workshop in 2023.
-            </p>
-          </div>
-        </section>
+        {/* Advocacy areas */}
+        <section id="advocacy" className="scroll-mt-24 bg-[#F0EBDD] px-6 py-20 sm:py-24">
+          <div className="mx-auto max-w-6xl">
+            <SectionHeading
+              eyebrow="What we stand for"
+              title="Inclusion is something we build together."
+              description="Kamay-Gabay brings people together through advocacy, accessible learning, and youth-led community action. These are the key areas reflected in its mission and purpose."
+            />
 
-        {/* SECTION 4: ALTERNATING CONTENT RIGHT */}
-        <section className="max-w-6xl mx-auto py-12 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-start-5 md:col-span-8 flex flex-col gap-3 text-left md:text-right">
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-[#23351C]">
-              Where we are now.
-            </h3>
-            <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
-              After two successful workshops and one fun day, Kamay Gabay in 2026, Kamay Gabay
-              3.0, marked a new chapter for the organization through a five-day workshop that was
-              bigger, more engaging, and more meaningful. For the first time, Kamay Gabay
-              conducted its own independent workshop, separate from the SK Academy, with its own
-              program, activities, prizes, and tokens for participants. More than just a
-              workshop, it reflected how far Kamay Gabay has grown—as an organization, a
-              community, and a movement for inclusion.
-            </p>
-          </div>
-        </section>
-
-        {/* SECTION 5: PROJECT IMPLEMENTATION SLIDER */}
-        <section id="activities" className="max-w-5xl mx-auto py-16 text-center">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-            LOOKING BACK
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#23351C] mt-1 mb-8">
-            Project Implementation
-          </h2>
-
-          <div className="relative flex items-center justify-center gap-4">
-            <button
-              className="p-2 rounded-full hover:bg-slate-200/80 transition text-slate-700"
-              aria-label="Previous"
-            >
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-
-            <div className="w-full max-w-3xl h-64 sm:h-96 bg-white/70 border border-slate-300 rounded-2xl shadow-inner flex items-center justify-center text-slate-400 font-medium">
-              Implementation Carousel / Slide Frame
-            </div>
-
-            <button
-              className="p-2 rounded-full hover:bg-slate-200/80 transition text-slate-700"
-              aria-label="Next"
-            >
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <div className="flex justify-center items-center gap-2 mt-6">
-            <span className="w-2.5 h-2.5 rounded-full bg-slate-800" />
-            <span className="w-2 h-2 rounded-full bg-slate-400" />
-            <span className="w-2 h-2 rounded-full bg-slate-400" />
-            <span className="w-2 h-2 rounded-full bg-slate-400" />
-          </div>
-        </section>
-
-        {/* SECTION 6: FREQUENTLY ASKED QUESTIONS */}
-        <section id="faq" className="max-w-4xl mx-auto py-16">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#23351C] mb-10 text-center lg:text-left">
-            Frequently Asked Questions
-          </h2>
-
-          <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-            {faqList.map((item, idx) => {
-              const isOpen = openFaq === idx
-              return (
-                <div
-                  key={idx}
-                  onClick={() => setOpenFaq(isOpen ? null : idx)}
-                  className={`bg-[#FFFDF6] hover:bg-white border border-slate-200/80 py-3.5 px-6 flex flex-col justify-center cursor-pointer transition-all duration-200 shadow-sm ${
-                    isOpen ? 'rounded-2xl' : 'rounded-full'
-                  }`}
+            <div className="mt-12 grid gap-4 sm:grid-cols-2">
+              {advocacyAreas.map((area) => (
+                <article
+                  key={area.number}
+                  className="group rounded-2xl border border-[#e3dcc8] bg-[#FAF4DE] p-6 transition hover:-translate-y-1 hover:shadow-md sm:p-8"
                 >
-                  <div className="flex justify-between items-center gap-2">
-                    <span className="text-xs sm:text-sm font-semibold text-slate-800">
-                      {item.q}
-                    </span>
-                    <div className="w-6 h-6 rounded-full bg-[#1b3d2b] text-white flex items-center justify-center shrink-0">
+                  <p className="text-xs font-bold tracking-[0.2em] text-emerald-800">
+                    {area.number}
+                  </p>
+                  <h3 className="mt-4 text-2xl font-serif font-extrabold text-[#23351C]">
+                    <span className="relative inline-block">
+                      {area.title}
                       <svg
-                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                          isOpen ? 'rotate-45' : ''
-                        }`}
+                        viewBox="0 0 200 12"
                         fill="none"
                         stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        preserveAspectRatio="none"
+                        className="pointer-events-none absolute -bottom-1 left-0 h-2.5 w-full text-[#F5C253] [stroke-dasharray:220] [stroke-dashoffset:220] transition-[stroke-dashoffset] duration-500 ease-out group-hover:[stroke-dashoffset:0]"
+                        aria-hidden="true"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2.5"
-                          d="M12 4v16m8-8H4"
-                        />
+                        <path d="M2 8 Q 30 2, 60 7 T 120 6 T 200 5" />
                       </svg>
-                    </div>
-                  </div>
+                    </span>
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">
+                    {area.description}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                  {isOpen && item.a && (
-                    <p className="mt-3 text-xs text-slate-600 border-t border-slate-200/60 pt-2 leading-relaxed">
-                      {item.a}
-                    </p>
-                  )}
+        {/* Photo carousel */}
+        <section className="px-0 py-16 sm:py-20">
+          <div className="mx-auto max-w-6xl px-6">
+            <SectionHeading
+              eyebrow="The people behind the purpose"
+              title="Inclusion comes to life through participation."
+              description="A glimpse into the people, learning experiences, and community moments that shape Kamay-Gabay. Use photographs from actual organizational activities here."
+            />
+          </div>
+          <div className="mt-10">
+            <Carousel
+              images={[
+                '/carousel/1.jpg',
+                '/carousel/2.jpg',
+                '/carousel/3.jpg',
+              ]}
+            />
+          </div>
+        </section>
+
+        {/* Featured activities */}
+        <section id="activities" className="scroll-mt-24 bg-white/65 px-6 py-20 sm:py-24">
+          <div className="mx-auto max-w-6xl">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+              <SectionHeading
+                eyebrow="Our work in action"
+                title="Activities and community initiatives"
+                description="Key community activities and initiatives by Kamay Gabay. Each one is an opportunity to learn, connect, and take part in building a more inclusive community."
+              />
+              <Link
+                to="/activities"
+                className="shrink-0 text-sm font-bold text-emerald-800 underline-offset-4 hover:underline"
+              >
+                View all activities →
+              </Link>
+            </div>
+
+            <div className="mt-10">
+              {loading ? (
+                <p className="text-sm text-slate-500">Loading activities…</p>
+              ) : activityError ? (
+                <p className="rounded-xl bg-amber-50 p-5 text-sm text-amber-900">
+                  Activities are temporarily unavailable. Please visit the
+                  Activities page or check back later.
+                </p>
+              ) : activities.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-emerald-900/20 bg-[#FAF4DE] px-6 py-10 text-center">
+                  <h3 className="font-bold text-[#23351C]">Activities will appear here</h3>
+                  <p className="mt-2 text-sm text-slate-600">
+                    Check back for published workshops and community initiatives.
+                  </p>
                 </div>
-              )
-            })}
+              ) : (
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {activities.map((activity) => (
+                    <article
+                      key={activity.id}
+                      className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                    >
+                      {activity.image_url ? (
+                        <img
+                          src={activity.image_url}
+                          alt={activity.title || 'Kamay-Gabay activity'}
+                          className="h-52 w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="flex h-52 items-center justify-center bg-emerald-50 text-sm text-emerald-900/60">
+                          Kamay-Gabay activity
+                        </div>
+                      )}
+                      <div className="flex flex-1 flex-col p-6">
+                        {activity.date && (
+                          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-800">
+                            {activity.date}
+                          </p>
+                        )}
+                        <h3 className="mt-2 font-serif text-2xl font-extrabold text-[#23351C]">
+                          {activity.title}
+                        </h3>
+                        {activity.description && (
+                          <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">
+                            {activity.description}
+                          </p>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* History teaser */}
+        <section className="px-6 py-20 sm:py-24">
+          <div className="mx-auto grid max-w-6xl gap-8 rounded-3xl bg-[#E9E2CC] p-8 sm:p-12 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-800">
+                Our journey
+              </p>
+              <h2 className="mt-3 max-w-2xl font-serif text-3xl font-extrabold text-[#23351C] sm:text-4xl">
+                Every initiative is part of a bigger story.
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
+                From its beginnings in 2023 to its continuing work today,
+                discover the milestones and experiences that have shaped
+                Kamay-Gabay. Visit the History page for the organization's
+                documented story.
+              </p>
+            </div>
+            <Link
+              to="/history"
+              className="inline-flex items-center justify-center rounded-full bg-[#173022] px-7 py-3 text-sm font-bold text-white transition hover:bg-emerald-900"
+            >
+              Explore our history →
+            </Link>
+          </div>
+        </section>
+
+        {/* Get involved */}
+        <section id="get-involved" className="scroll-mt-24 px-6 pb-20 sm:pb-24">
+          <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-[#173022] px-7 py-14 text-center text-white shadow-xl sm:px-12 sm:py-16">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#F5C253]">
+              Be part of the community
+            </p>
+            <h2 className="mx-auto mt-4 max-w-3xl font-serif text-3xl font-extrabold sm:text-4xl lg:text-5xl">
+              There is a place for you in building inclusion.
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-emerald-50/80 sm:text-base">
+              Kamay-Gabay is free and open to everyone who wants to participate.
+              Anyone who joins a registered workshop or activity becomes part
+              of the community. Registration is required before participating,
+              and there is no membership or registration fee.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link
+                to="/activities"
+                className="rounded-full bg-[#F5C253] px-7 py-3 text-sm font-extrabold text-[#173022] transition hover:bg-[#e6b24a]"
+              >
+                Find an activity
+              </Link>
+              <a
+                href={FACEBOOK_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-white/40 px-7 py-3 text-sm font-bold text-white transition hover:bg-white/10"
+              >
+                Message us on Facebook
+              </a>
+            </div>
           </div>
         </section>
       </main>
 
-      {/* 4. FOOTER */}
-      <footer className="bg-[#173022] text-slate-200 pt-16 pb-8 px-6 sm:px-12 lg:px-24 rounded-t-[2.5rem] relative z-30 -mt-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-4 mb-12">
-            <div className="w-12 h-12 bg-slate-300 rounded-lg shrink-0" />
+      {/* Footer */}
+      <footer className="bg-[#10251A] px-6 pb-8 pt-14 text-emerald-50 sm:px-10 lg:px-12">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-10 border-b border-white/10 pb-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
             <div>
-              <h3 className="text-2xl font-bold text-white tracking-tight">Kamay-Gabay</h3>
-              <p className="text-xs text-slate-400">Empowering Voices, Embracing Inclusion</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-7 gap-8 pb-12 border-b border-white/10 text-xs">
-            <div>
-              <h4 className="font-bold text-white mb-3">Quick Links</h4>
-              <ul className="space-y-2 text-slate-300">
-                <li>
-                  <a href="#" className="hover:underline">
-                    Volunteers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    About us
-                  </a>
-                </li>
-              </ul>
+              <h2 className="text-2xl font-extrabold tracking-tight text-[#F5C253]">
+                Kamay-Gabay
+              </h2>
+              <p className="mt-3 max-w-xs text-sm leading-6 text-emerald-50/65">
+                Empowering voices. Embracing inclusion. A youth-led initiative
+                based in Barangay Tibungco, Davao City.
+              </p>
             </div>
 
             <div>
-              <h4 className="font-bold text-white mb-3">Policies</h4>
-              <ul className="space-y-2 text-slate-300">
-                <li>
-                  <a href="#" className="hover:underline">
-                    Privacy Policy
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white mb-3">Address</h4>
-              <p className="text-slate-300 leading-relaxed">Barangay Tibungco, Davao City</p>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white mb-3">Contact Number</h4>
-              <p className="text-slate-300">+63 993 902 3168</p>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white mb-3">Email</h4>
-              <p className="text-slate-300">kamaygabay@gmail.com</p>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white mb-3">Socials</h4>
-              <div className="flex gap-3 text-slate-300 font-bold text-xs">
-                <a href="#" className="hover:text-white">
-                  FB
-                </a>
-                <a href="#" className="hover:text-white">
-                  IG
-                </a>
-                <a href="#" className="hover:text-white">
-                  X
-                </a>
+              <h3 className="text-sm font-bold text-white">Explore</h3>
+              <div className="mt-4 flex flex-col gap-3 text-sm text-emerald-50/70">
+                <a href="#about" className="hover:text-[#F5C253]">About</a>
+                <a href="#advocacy" className="hover:text-[#F5C253]">Advocacy</a>
+                <Link to="/history" className="hover:text-[#F5C253]">History</Link>
+                <Link to="/activities" className="hover:text-[#F5C253]">Activities</Link>
+                <Link to="/officers" className="hover:text-[#F5C253]">Officers</Link>
               </div>
             </div>
+
+            <div>
+              <h3 className="text-sm font-bold text-white">Contact</h3>
+              <div className="mt-4 flex flex-col gap-3 text-sm text-emerald-50/70">
+                <a href="tel:+639939023168" className="hover:text-[#F5C253]">
+                  +63 993 902 3168
+                </a>
+                <a href="mailto:kamaygabay@gmail.com" className="break-all hover:text-[#F5C253]">
+                  kamaygabay@gmail.com
+                </a>
+                <p>Barangay Tibungco, Davao City</p>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-bold text-white">Follow our work</h3>
+              <a
+                href={FACEBOOK_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 inline-flex text-sm text-emerald-50/70 underline underline-offset-4 hover:text-[#F5C253]"
+              >
+                Official Facebook page →
+              </a>
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between items-center pt-6 text-[11px] text-slate-400 gap-2">
-            <p>Kamay-Gabay. All rights reserved.</p>
-            <p>© 2026 Kamay-Gabay.</p>
+          <div className="flex flex-col gap-2 pt-6 text-xs text-emerald-50/45 sm:flex-row sm:items-center sm:justify-between">
+            <p>© {new Date().getFullYear()} Kamay-Gabay. All rights reserved.</p>
+            <a href="#top" className="hover:text-[#F5C253]">Back to top ↑</a>
           </div>
         </div>
       </footer>

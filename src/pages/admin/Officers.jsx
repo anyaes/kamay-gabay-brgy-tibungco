@@ -5,6 +5,8 @@ import { uploadImage } from '../../utils/uploadImage.js'
 const empty = {
   name: '',
   role_title: '',
+  department: '',
+  year: new Date().getFullYear(),
   sort_order: 0,
   active: true,
   photo_url: '',
@@ -42,6 +44,8 @@ export default function Officers() {
     setForm({
       name: item.name,
       role_title: item.role_title,
+      department: item.department || '',
+      year: item.year || new Date().getFullYear(),
       sort_order: item.sort_order,
       active: item.active,
       photo_url: item.photo_url || '',
@@ -113,6 +117,9 @@ export default function Officers() {
             <div className="flex-1">
               <h3 className="font-bold text-[#23351C]">{item.name}</h3>
               <p className="text-sm text-slate-600">{item.role_title}</p>
+              <p className="text-xs text-slate-500">
+                {[item.department, item.year].filter(Boolean).join(' · ')}
+              </p>
               <span
                 className={`inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
                   item.active
@@ -170,6 +177,38 @@ export default function Officers() {
                 setForm({ ...form, role_title: e.target.value })
               }
               required
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm mb-3"
+            />
+
+            <label className="block text-xs font-bold text-slate-600 mb-1">
+              Department
+            </label>
+            <input
+              value={form.department}
+              onChange={(e) =>
+                setForm({ ...form, department: e.target.value })
+              }
+              list="departments"
+              placeholder="e.g. Executive, FSL, Community"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm mb-3"
+            />
+            <datalist id="departments">
+              <option value="Executive" />
+              <option value="FSL / Education" />
+              <option value="Community" />
+              <option value="Outreach" />
+              <option value="Creative" />
+            </datalist>
+
+            <label className="block text-xs font-bold text-slate-600 mb-1">
+              Year
+            </label>
+            <input
+              type="number"
+              value={form.year}
+              onChange={(e) =>
+                setForm({ ...form, year: parseInt(e.target.value) || new Date().getFullYear() })
+              }
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm mb-3"
             />
 

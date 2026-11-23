@@ -1,22 +1,34 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { supabase } from '../utils/supabase.js'
+import { supabase, isSupabaseConfigured } from '../utils/supabase.js'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!isSupabaseConfigured)
+
+  async function loadProfile(userId) {
+    const { data } = await supabase
+      .from('profiles')
+      .select('id, email, role')
+      .eq('id', userId)
+      .single()
+    setProfile(data)
+    setLoading(false)
+  }
 
   useEffect(() => {
-    // Initial session
+    if (!isSupabaseConfigured || !supabase) {
+      return
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       if (session) loadProfile(session.user.id)
       else setLoading(false)
     })
 
-    // Listen to auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -31,16 +43,6 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  async function loadProfile(userId) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('id, email, role')
-      .eq('id', userId)
-      .single()
-    setProfile(data)
-    setLoading(false)
-  }
-
   async function signIn(email, password) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
@@ -54,8 +56,7 @@ export function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider')
-  return ctx
+  return useContext(AuthContext)
 }

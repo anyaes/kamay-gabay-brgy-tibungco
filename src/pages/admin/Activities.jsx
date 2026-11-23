@@ -5,6 +5,7 @@ import { uploadImage } from '../../utils/uploadImage.js'
 const empty = {
   title: '',
   description: '',
+  content: '',
   date: '',
   published: true,
   image_url: '',
@@ -42,6 +43,7 @@ export default function Activities() {
     setForm({
       title: item.title,
       description: item.description || '',
+      content: item.content || '',
       date: item.date || '',
       published: item.published,
       image_url: item.image_url || '',
@@ -187,8 +189,21 @@ export default function Activities() {
               onChange={(e) =>
                 setForm({ ...form, description: e.target.value })
               }
-              rows={3}
+              rows={2}
               className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm mb-3"
+            />
+
+            <label className="block text-xs font-bold text-slate-600 mb-1">
+              Content
+            </label>
+            <textarea
+              value={form.content}
+              onChange={(e) =>
+                setForm({ ...form, content: e.target.value })
+              }
+              rows={10}
+              placeholder="Full blog post body…"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm mb-3 font-mono"
             />
 
             <label className="block text-xs font-bold text-slate-600 mb-1">

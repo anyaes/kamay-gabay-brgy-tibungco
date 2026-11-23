@@ -1,7 +1,5 @@
-import { NavLink, Outlet, Navigate, Route, Routes } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext.jsx'
-import Activities from './Activities.jsx'
-import Officers from './Officers.jsx'
 
 export default function AdminLayout() {
   const { profile, signOut } = useAuth()
@@ -42,12 +40,7 @@ export default function AdminLayout() {
       </aside>
 
       <main className="flex-1 p-6 lg:p-10 overflow-auto">
-        <Routes>
-          <Route index element={<Navigate to="activities" replace />} />
-          <Route path="activities" element={<Activities />} />
-          <Route path="officers" element={<Officers />} />
-          <Route path="*" element={<Navigate to="activities" replace />} />
-        </Routes>
+        <Outlet />
       </main>
     </div>
   )
