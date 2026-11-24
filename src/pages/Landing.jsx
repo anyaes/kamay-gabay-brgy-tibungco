@@ -87,7 +87,7 @@ export default function Landing() {
           { to: '/officers', label: 'Officers' },
           { to: '/contact', label: 'Contact' },
         ]}
-        cta={{ label: 'Get involved', to: '#get-involved' }}
+        cta={{ label: 'Get involved', to: '/get-involved' }}
       />
 
       {/* Existing scroll-zoom hero */}
