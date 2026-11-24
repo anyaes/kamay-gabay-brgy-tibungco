@@ -10,9 +10,6 @@ export default function ScrollZoomHero() {
   // Slight vertical pan for depth
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '8%'])
 
-  // Parallax layer: clouds move slower (less transform)
-  const cloudX = useTransform(scrollYProgress, [0, 1], ['0%', '-15%'])
-
   // Overlay text fades out as we zoom in
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0])
 
@@ -29,7 +26,7 @@ export default function ScrollZoomHero() {
         >
           <img
             src={heroImg}
-            alt="Kamay-Gabay community map"
+            alt="Kamay-G Gabay community map"
             className="w-full h-full object-cover object-center brightness-90"
             onError={(e) => {
               e.currentTarget.style.display = 'none'
@@ -39,21 +36,6 @@ export default function ScrollZoomHero() {
 
         {/* Gradient overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-
-        {/* Parallax cloud layer (decorative) */}
-        <motion.div
-          style={{ x: cloudX }}
-          className="absolute top-10 left-0 w-full pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <div className="mx-auto w-[80%] max-w-4xl opacity-20">
-            <svg viewBox="0 0 400 80" fill="none" stroke="white" strokeWidth="2">
-              <path d="M40 60c0-10 8-18 18-18 2-8 9-14 18-14 10 0 18 8 18 18 8 0 14 6 14 14s-6 14-14 14H58c-10 0-18-8-18-14Z" />
-              <path d="M200 60c0-8 6-14 14-14 2-6 7-10 14-10 8 0 14 6 14 14 6 0 10 4 10 10s-4 10-10 10h-28c-8 0-14-6-14-10Z" />
-              <path d="M300 60c0-10 8-18 18-18 2-8 9-14 18-14 10 0 18 8 18 18 8 0 14 6 14 14s-6 14-14 14h-36c-10 0-18-8-18-14Z" />
-            </svg>
-          </div>
-        </motion.div>
       </div>
 
       {/* Foreground content (stays put while background zooms) */}
