@@ -59,7 +59,7 @@ const timeline = [
 const galleryTiles = [
   { src: '/history/first-workshop.png', label: 'The First Workshop', date: '2024', alt: 'First Kamay-Gabay workshop' },
   { src: '/history/happy-walk.png', label: 'Happy Walk 2024', date: '2024', alt: 'Happy Walk 2024' },
-  { src: '/history/kg2.png', label: 'Kamay-G Gabay 2.0', date: '2024–2025', alt: 'Kamay-G Gabay 2.0 workshop' },
+  { src: '/history/kg2.png', label: 'Kamay Gabay 2.0', date: '2024–2025', alt: 'Kamay Gabay 2.0 workshop' },
   { src: '/history/summer-fun-day.png', label: 'Summer Fun Day', date: '2026', alt: 'Summer Fun Day for Children with Disabilities' },
 ]
 
@@ -75,7 +75,7 @@ export default function History() {
       />
 
       {/* Timeline */}
-      <section className="bg-[#F0EBDD] px-6 py-16 sm:py-20">
+      <section className="bg-gradient-to-b from-[#FAF4DE] via-[#F0EBDD] to-[#FAF4DE] px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-4xl">
           <div className="relative">
             <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-emerald-800/20" />
@@ -192,30 +192,6 @@ export default function History() {
                 </span>
               </Link>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="px-6 pb-20">
-        <div className="mx-auto max-w-4xl">
-          <div className="rounded-3xl bg-[#173022] px-8 py-14 text-center text-white shadow-xl">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#F5C253]">
-              Be Part of the Story
-            </p>
-            <h2 className="mt-3 font-serif text-3xl font-extrabold sm:text-4xl">
-              Every Step Is Part of a Bigger Story.
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-emerald-50/80">
-              Join a workshop or activity and become part of our growing
-              community.
-            </p>
-            <Link
-              to="/activities"
-              className="mt-8 inline-block rounded-full bg-[#F5C253] px-8 py-3 text-sm font-extrabold text-[#173022] transition hover:bg-[#e6b24a]"
-            >
-              See Activities
-            </Link>
           </div>
         </div>
       </section>

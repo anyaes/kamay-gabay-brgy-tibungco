@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import SectionHeading from '../components/SectionHeading.jsx'
 import PageHero from '../components/PageHero.jsx'
@@ -81,6 +82,7 @@ const values = [
 ]
 
 export default function About() {
+  const [activeTab, setActiveTab] = useState('Vision')
   return (
 <div className="bg-[#FAF4DE] font-sans text-slate-800">
       <PageHero
@@ -112,43 +114,34 @@ export default function About() {
         </div>
       </section>
 
-      {/* Vision & Mission */}
-      <section className="bg-[#F0EBDD] px-6 py-20 sm:py-24">
-        <div className="mx-auto max-w-6xl">
-          <SectionHeading
-            eyebrow="Our Purpose"
-            title="What Drives Us Forward."
-          />
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl border border-[#e7dfc7] bg-[#FAF4DE] p-8 sm:p-10">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-800">
-                Vision
-              </p>
-              <p className="mt-4 font-serif text-xl font-bold leading-snug text-[#23351C] sm:text-2xl">
-                To build an inclusive, barrier-free society where disability
-                awareness, equal opportunities, and the active integration of
-                children with special needs and the Deaf community are fully
-                embraced, driven by empowered youth leading compassionate
-                community action.
-              </p>
-            </div>
-            <div className="rounded-3xl border border-[#e7dfc7] bg-[#FAF4DE] p-8 sm:p-10">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-800">
-                Mission
-              </p>
-              <p className="mt-4 font-serif text-xl font-bold leading-snug text-[#23351C] sm:text-2xl">
-                Kamay-Gabay is committed to fostering holistic community
-                inclusion and youth empowerment through accessible educational
-                workshops, advocacy campaigns, and hands-on learning initiatives.
-                By making it free and open to everyone who wants to join our
-                growing network, we create safe, active, and collaborative spaces
-                that champion diversity, accessibility, and equal care for every
-                child and youth.
-              </p>
-            </div>
+{/* Vision & Mission */}
+      <div className="w-full bg-gradient-to-br from-[#173022] to-[#1b3d2b]">
+        <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
+          {/* Toggle buttons */}
+          <div className="flex gap-3">
+            {['Vision', 'Mission'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`rounded-full px-8 py-3 text-sm font-extrabold uppercase tracking-wider transition ${
+                  activeTab === tab
+                    ? 'bg-[#F5C253] text-[#173022] shadow-lg'
+                    : 'border border-white/30 text-white/70 hover:border-white/50 hover:text-white'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
+
+          {/* Content */}
+          <p className="mt-10 max-w-4xl font-serif text-2xl font-bold leading-relaxed text-white sm:text-3xl lg:text-4xl">
+            {activeTab === 'Vision'
+              ? 'To build an inclusive, barrier-free society where disability awareness, equal opportunities, and the active integration of children with special needs and the Deaf community are fully embraced, driven by empowered youth leading compassionate community action.'
+              : 'Kamay-Gabay is committed to fostering holistic community inclusion and youth empowerment through accessible educational workshops, advocacy campaigns, and hands-on learning initiatives. By making it free and open to everyone who wants to join our growing network, we create safe, active, and collaborative spaces that champion diversity, accessibility, and equal care for every child and youth.'}
+          </p>
         </div>
-      </section>
+      </div>
 
       {/* Advocacy */}
       <section className="px-6 py-20 sm:py-24">
@@ -192,7 +185,7 @@ export default function About() {
       </section>
 
       {/* Values */}
-      <section className="bg-[#F0EBDD] px-6 py-20 sm:py-24">
+      <section className="bg-gradient-to-b from-[#FAF4DE] via-[#F0EBDD] to-[#FAF4DE] px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeading
             eyebrow="Our Values"
@@ -227,19 +220,17 @@ export default function About() {
               <br />
               You Just Have to Do Something.
             </h2>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <p className="mt-4 text-m text-white leading-relaxed">
+             Kamay Gabay welcomes volunteers of any kind. Come and join us on our journey of furthering inclusion.
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-3">
               <Link
                 to="/get-involved"
                 className="rounded-full bg-[#F5C253] px-7 py-3 text-sm font-extrabold text-[#173022] transition hover:bg-[#e6b24a]"
               >
                 Get Involved
               </Link>
-              <Link
-                to="/activities"
-                className="rounded-full border border-white/40 px-7 py-3 text-sm font-bold text-white transition hover:bg-white/10"
-              >
-                Find an Activity
-              </Link>
+            
             </div>
           </div>
         </div>

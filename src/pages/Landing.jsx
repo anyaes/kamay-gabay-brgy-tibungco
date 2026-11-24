@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import ScrollZoomHero from '../components/ScrollZoomHero.jsx'
-import Carousel from '../components/Carousel.jsx'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 import SectionHeading from '../components/SectionHeading.jsx'
@@ -157,7 +156,7 @@ export default function Landing() {
         </section>
 
         {/* Advocacy areas */}
-        <section id="advocacy" className="scroll-mt-24 bg-[#F0EBDD] px-6 py-20 sm:py-24">
+        <section id="advocacy" className="scroll-mt-24 bg-gradient-to-b from-[#FAF4DE] via-[#F0EBDD] to-[#FAF4DE] px-6 py-20 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <SectionHeading
               eyebrow="What we stand for"
@@ -200,34 +199,14 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* Photo carousel */}
-        <section className="px-0 py-16 sm:py-20">
-          <div className="mx-auto max-w-6xl px-6">
-            <SectionHeading
-              eyebrow="The people behind the purpose"
-              title="Inclusion comes to life through participation."
-              description="A glimpse into the people, learning experiences, and community moments that shape Kamay-Gabay. Use photographs from actual organizational activities here."
-            />
-          </div>
-          <div className="mt-10">
-            <Carousel
-              images={[
-                '/carousel/1.jpg',
-                '/carousel/2.jpg',
-                '/carousel/3.jpg',
-              ]}
-            />
-          </div>
-        </section>
-
-        {/* Featured activities */}
+{/* Featured activities */}
         <section id="activities" className="scroll-mt-24 bg-white/65 px-6 py-20 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
               <SectionHeading
                 eyebrow="Our work in action"
                 title="Activities and community initiatives"
-                description="Key community activities and initiatives by Kamay Gabay. Each one is an opportunity to learn, connect, and take part in building a more inclusive community."
+                description="Key community activities and initiatives by Kamay-G Gabay. Each one is an opportunity to learn, connect, and take part in building a more inclusive community."
               />
               <Link
                 to="/activities"
@@ -253,7 +232,11 @@ export default function Landing() {
                   </p>
                 </div>
               ) : (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <>
+                  
+
+                  {/* Activity cards */}
+                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {activities.map((activity) => (
                     <Link
                       key={activity.id}
@@ -329,34 +312,39 @@ export default function Landing() {
                     </Link>
                   ))}
                 </div>
+                </>
               )}
             </div>
           </div>
         </section>
 
-        {/* History teaser */}
+{/* History teaser */}
         <section className="px-6 py-20 sm:py-24">
-          <div className="mx-auto grid max-w-6xl gap-8 rounded-3xl bg-[#E9E2CC] p-8 sm:p-12 md:grid-cols-[1fr_auto] md:items-center">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-800">
-                Our journey
-              </p>
-              <h2 className="mt-3 max-w-2xl font-serif text-3xl font-extrabold text-[#23351C] sm:text-4xl">
-                Every initiative is part of a bigger story.
-              </h2>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
-                From its beginnings in 2023 to its continuing work today,
-                discover the milestones and experiences that have shaped
-                Kamay-Gabay. Visit the History page for the organization's
-                documented story.
-              </p>
+          <div className="mx-auto max-w-6xl">
+            <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-800">
+                  Our journey
+                </p>
+                <h2 className="mt-3 max-w-2xl font-serif text-3xl font-extrabold text-[#23351C] sm:text-4xl">
+                  Every initiative is part of a bigger story.
+                </h2>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">
+                  From its beginnings in 2023 to its continuing work today,
+                  discover the milestones and experiences that have shaped
+                  Kamay-Gabay. Visit the History page for the organization's
+                  documented story.
+                </p>
+              </div>
+              <Link
+                to="/history"
+                className="group inline-flex items-center gap-2 text-sm font-bold text-[#173022] underline-offset-4 hover:underline"
+              >
+                Explore our history
+                <span className="transition-transform group-hover:translate-x-1">→</span>
+              </Link>
             </div>
-            <Link
-              to="/history"
-              className="inline-flex items-center justify-center rounded-full bg-[#173022] px-7 py-3 text-sm font-bold text-white transition hover:bg-emerald-900"
-            >
-              Explore our history →
-            </Link>
+            <div className="mt-8 h-px w-full bg-gradient-to-r from-emerald-800/30 via-emerald-800/10 to-transparent" />
           </div>
         </section>
 

@@ -93,7 +93,7 @@ export default function GetInvolved() {
       </section>
 
       {/* Support Our Initiatives */}
-      <section className="bg-[#F0EBDD] px-6 py-20 sm:py-24">
+      <section className="bg-gradient-to-b from-[#FAF4DE] via-[#F0EBDD] to-[#FAF4DE] px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeading
             eyebrow="Support Our Initiatives"
