@@ -28,13 +28,13 @@ export default function Contact() {
   }
 
   return (
-    <div className="bg-[#FAF4DE] font-sans text-slate-800">
+<div className="bg-[#FAF4DE] font-sans text-slate-800">
       <section className="px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeading
             eyebrow="Get in Touch"
-            title="We’d Love to Hear From You."
-            description="Whether you’re interested in joining, volunteering, partnering, or supporting Kamay-Gabay, reach out through any of the channels below."
+            title="We'd Love to Hear From You."
+            description="Whether you're interested in joining, volunteering, partnering, or supporting Kamay-G Gabay, reach out through any of the channels below."
           />
 
           <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_1.2fr]">

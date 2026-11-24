@@ -4,7 +4,7 @@ const FACEBOOK_URL = 'https://www.facebook.com/p/Kamay-Gabay-61570749000594/'
 
 export default function Footer() {
   return (
-    <footer className="bg-[#10251A] px-6 pb-8 pt-14 text-emerald-50 sm:px-10 lg:px-12">
+<footer className="bg-[#10251A] px-6 pb-8 pt-14 text-emerald-50 sm:px-10 lg:px-12">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-10 border-b border-white/10 pb-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>

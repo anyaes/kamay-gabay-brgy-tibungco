@@ -12,6 +12,7 @@ import Login from './pages/admin/Login.jsx'
 import AdminLayout from './pages/admin/Layout.jsx'
 import AdminActivities from './pages/admin/Activities.jsx'
 import AdminOfficers from './pages/admin/Officers.jsx'
+import AdminDepartments from './pages/admin/Departments.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
           <Route index element={<Navigate to="activities" replace />} />
           <Route path="activities" element={<AdminActivities />} />
           <Route path="officers" element={<AdminOfficers />} />
+          <Route path="departments" element={<AdminDepartments />} />
           <Route path="*" element={<Navigate to="activities" replace />} />
         </Route>
       </Route>

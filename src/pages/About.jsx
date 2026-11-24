@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import SectionHeading from '../components/SectionHeading.jsx'
+import PageHero from '../components/PageHero.jsx'
 
 const advocacyAreas = [
   {
@@ -81,7 +82,15 @@ const values = [
 
 export default function About() {
   return (
-    <div className="bg-[#FAF4DE] font-sans text-slate-800">
+<div className="bg-[#FAF4DE] font-sans text-slate-800">
+      <PageHero
+        eyebrow="About Kamay-Gabay"
+        title="A Community Built on Understanding and Inclusion."
+        description="Kamay-Gabay is a youth-led organization that promotes inclusion, understanding, and empowerment within the community."
+        image="/about/about-hero.png"
+        imageAlt="Kamay-Gabay community"
+      />
+
       {/* About intro */}
       <section className="px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">

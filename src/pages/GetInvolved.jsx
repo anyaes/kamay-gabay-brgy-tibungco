@@ -26,7 +26,7 @@ const supportWays = [
 
 export default function GetInvolved() {
   return (
-    <div className="bg-[#FAF4DE] font-sans text-slate-800">
+<div className="bg-[#FAF4DE] font-sans text-slate-800">
       {/* Become a Member */}
       <section className="px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">
